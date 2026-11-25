@@ -1,0 +1,573 @@
+{
+ "stages": {
+  "id": "",
+  "emoji": "📊",
+  "title": "Funnel Health — Conversion vs Target",
+  "description": "Recomputed every four hours. Edit KPI Target % freely; nothing else in this table is hand-maintained.",
+  "properties": {
+   "Stage": {
+    "title": {}
+   },
+   "Definition": {
+    "rich_text": {}
+   },
+   "Last computed": {
+    "date": {}
+   },
+   "Conversion %": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Entered": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "#": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Avg days to advance": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Movement": {
+    "select": {
+     "options": [
+      {
+       "name": "🤖 Automatic",
+       "color": "green"
+      },
+      {
+       "name": "✍️ Manual (EOD)",
+       "color": "orange"
+      }
+     ]
+    }
+   },
+   "Open now": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Variance": {
+    "formula": {
+     "expression": "if(prop(\"#\") == 9 or not(prop(\"Entered\") > 0), toNumber(\"\"), round((prop(\"Conversion %\") - prop(\"KPI Target %\")) * 10) / 10)"
+    }
+   },
+   "KPI Target %": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Advanced": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Owner": {
+    "select": {
+     "options": [
+      {
+       "name": "Setter",
+       "color": "blue"
+      },
+      {
+       "name": "Closer",
+       "color": "orange"
+      },
+      {
+       "name": "Marketing",
+       "color": "purple"
+      },
+      {
+       "name": "Delivery",
+       "color": "green"
+      },
+      {
+       "name": "Automated",
+       "color": "gray"
+      }
+     ]
+    }
+   },
+   "Health": {
+    "formula": {
+     "expression": "if(prop(\"#\") == 9, \"◆ End of journey\", if(prop(\"Entered\") > 0, if(prop(\"Conversion %\") >= prop(\"KPI Target %\"), \"🟢 On target\", if(prop(\"Conversion %\") >= prop(\"KPI Target %\") - 10, \"🟡 Watch\", \"🔴 Bottleneck\")), \"· no data yet\"))"
+    }
+   },
+   "How it advances": {
+    "rich_text": {}
+   },
+   "Lost here": {
+    "number": {
+     "format": "number"
+    }
+   }
+  }
+ },
+ "eod": {
+  "id": "",
+  "emoji": "📞",
+  "title": "Call EOD Reports — Triage & Closing",
+  "description": "One row per call, written by the EOD report. Filing a row moves the lead's Journey Stage.",
+  "properties": {
+   "Report": {
+    "title": {}
+   },
+   "Main objection": {
+    "rich_text": {}
+   },
+   "Next step": {
+    "rich_text": {}
+   },
+   "Next step due": {
+    "date": {}
+   },
+   "Recording": {
+    "url": {}
+   },
+   "Call type": {
+    "select": {
+     "options": [
+      {
+       "name": "Triage Call",
+       "color": "yellow"
+      },
+      {
+       "name": "Closing Call",
+       "color": "brown"
+      }
+     ]
+    }
+   },
+   "Closer": {
+    "select": {
+     "options": []
+    }
+   },
+   "Applied to journey": {
+    "checkbox": {}
+   },
+   "Outcome": {
+    "select": {
+     "options": [
+      {
+       "name": "Closing call booked",
+       "color": "green"
+      },
+      {
+       "name": "Sending nurture pack",
+       "color": "green"
+      },
+      {
+       "name": "Closed Won",
+       "color": "green"
+      },
+      {
+       "name": "Closed Lost",
+       "color": "red"
+      },
+      {
+       "name": "Follow-up booked",
+       "color": "yellow"
+      },
+      {
+       "name": "Held — no decision",
+       "color": "yellow"
+      },
+      {
+       "name": "Not qualified — rejected",
+       "color": "pink"
+      },
+      {
+       "name": "No-show",
+       "color": "gray"
+      },
+      {
+       "name": "Rescheduled",
+       "color": "gray"
+      }
+     ]
+    }
+   },
+   "Ticket": {
+    "number": {
+     "format": "dollar"
+    }
+   },
+   "Source": {
+    "select": {
+     "options": [
+      {
+       "name": "Instagram DM",
+       "color": "blue"
+      },
+      {
+       "name": "Referral",
+       "color": "green"
+      },
+      {
+       "name": "Website application",
+       "color": "purple"
+      },
+      {
+       "name": "Event",
+       "color": "orange"
+      },
+      {
+       "name": "Podcast or press",
+       "color": "yellow"
+      },
+      {
+       "name": "Paid ads",
+       "color": "pink"
+      },
+      {
+       "name": "Outbound",
+       "color": "brown"
+      },
+      {
+       "name": "Other",
+       "color": "gray"
+      }
+     ]
+    }
+   },
+   "Notes": {
+    "rich_text": {}
+   },
+   "Attendance": {
+    "select": {
+     "options": [
+      {
+       "name": "Showed",
+       "color": "green"
+      },
+      {
+       "name": "No-show",
+       "color": "red"
+      },
+      {
+       "name": "Rescheduled",
+       "color": "yellow"
+      },
+      {
+       "name": "Cancelled",
+       "color": "gray"
+      }
+     ]
+    }
+   },
+   "Tier discussed": {
+    "select": {
+     "options": [
+      {
+       "name": "Option A",
+       "color": "blue"
+      },
+      {
+       "name": "Option B",
+       "color": "green"
+      },
+      {
+       "name": "Option C",
+       "color": "purple"
+      },
+      {
+       "name": "Undecided",
+       "color": "orange"
+      }
+     ]
+    }
+   },
+   "Date": {
+    "date": {}
+   },
+   "Cash collected": {
+    "number": {
+     "format": "dollar"
+    }
+   }
+  }
+ },
+ "setter": {
+  "id": "",
+  "emoji": "📣",
+  "title": "Setter Daily Activity",
+  "description": "One row per setter per day, written by the setter tab of the EOD report.",
+  "properties": {
+   "Day": {
+    "title": {}
+   },
+   "Profile visits": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Setter": {
+    "rich_text": {}
+   },
+   "Hit KPIs": {
+    "rich_text": {}
+   },
+   "Date": {
+    "date": {}
+   },
+   "Messages sent": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Channel": {
+    "select": {
+     "options": [
+      {
+       "name": "Instagram DM",
+       "color": "blue"
+      },
+      {
+       "name": "Referral",
+       "color": "green"
+      },
+      {
+       "name": "Website application",
+       "color": "purple"
+      },
+      {
+       "name": "Event",
+       "color": "orange"
+      },
+      {
+       "name": "Podcast or press",
+       "color": "yellow"
+      },
+      {
+       "name": "Paid ads",
+       "color": "pink"
+      },
+      {
+       "name": "Outbound",
+       "color": "brown"
+      },
+      {
+       "name": "Other",
+       "color": "gray"
+      }
+     ]
+    }
+   },
+   "Calls held": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Hottest lead": {
+    "rich_text": {}
+   },
+   "Notes": {
+    "rich_text": {}
+   },
+   "Calls booked": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Inbounds": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Booked per 100 DMs": {
+    "formula": {
+     "expression": "if(prop(\"Messages sent\") == 0, toNumber(\"\"), round(prop(\"Calls booked\") / prop(\"Messages sent\") * 1000) / 10)"
+    }
+   },
+   "Cancellations": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Closing calls booked": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Held rate %": {
+    "formula": {
+     "expression": "if(prop(\"Calls booked\") == 0, toNumber(\"\"), round(prop(\"Calls held\") / prop(\"Calls booked\") * 1000) / 10)"
+    }
+   },
+   "Outbounds": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Lead quality": {
+    "rich_text": {}
+   },
+   "New followers": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Links sent": {
+    "number": {
+     "format": "number"
+    }
+   }
+  }
+ },
+ "assets": {
+  "id": "",
+  "emoji": "🎬",
+  "title": "Journey Assets: VSL and Nurture Tracking",
+  "description": "Paste a Video URL to take an asset live. Sent / Opened / Played / Completed are written by the watch pages.",
+  "properties": {
+   "Asset": {
+    "title": {}
+   },
+   "Completion %": {
+    "formula": {
+     "expression": "if(prop(\"Played\") == 0, toNumber(\"\"), round(prop(\"Completed\") / prop(\"Played\") * 1000) / 10)"
+    }
+   },
+   "Watch page": {
+    "url": {}
+   },
+   "Stage": {
+    "select": {
+     "options": [
+      {
+       "name": "1. Social & DMs",
+       "color": "gray"
+      },
+      {
+       "name": "2. Website",
+       "color": "brown"
+      },
+      {
+       "name": "3. Application",
+       "color": "orange"
+      },
+      {
+       "name": "4. Initial VSL",
+       "color": "yellow"
+      },
+      {
+       "name": "5. Triage Call",
+       "color": "yellow"
+      },
+      {
+       "name": "6. Post-Triage Nurture",
+       "color": "orange"
+      },
+      {
+       "name": "7. Closing Call",
+       "color": "brown"
+      },
+      {
+       "name": "8. Payment",
+       "color": "green"
+      },
+      {
+       "name": "9. Onboarding",
+       "color": "green"
+      }
+     ]
+    }
+   },
+   "Avg watch %": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Video URL": {
+    "url": {}
+   },
+   "Completed": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Open rate %": {
+    "formula": {
+     "expression": "if(prop(\"Sent\") == 0, toNumber(\"\"), round(prop(\"Opened\") / prop(\"Sent\") * 1000) / 10)"
+    }
+   },
+   "Opened": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Type": {
+    "select": {
+     "options": [
+      {
+       "name": "Initial VSL",
+       "color": "yellow"
+      },
+      {
+       "name": "Post-Triage VSL",
+       "color": "orange"
+      },
+      {
+       "name": "Proof asset",
+       "color": "green"
+      },
+      {
+       "name": "Nurture asset",
+       "color": "brown"
+      }
+     ]
+    }
+   },
+   "Slug": {
+    "rich_text": {}
+   },
+   "Status": {
+    "select": {
+     "options": [
+      {
+       "name": "🔴 Needs video",
+       "color": "red"
+      },
+      {
+       "name": "🟡 Draft",
+       "color": "yellow"
+      },
+      {
+       "name": "🟢 Live",
+       "color": "green"
+      }
+     ]
+    }
+   },
+   "Sent": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Headline": {
+    "rich_text": {}
+   },
+   "Last computed": {
+    "date": {}
+   },
+   "Played": {
+    "number": {
+     "format": "number"
+    }
+   },
+   "Duration": {
+    "rich_text": {}
+   },
+   "Blurb": {
+    "rich_text": {}
+   }
+  }
+ }
+}

@@ -1,0 +1,355 @@
+{
+  "_comment": "Single source of truth for one client's EOD and client-journey system. Every value marked YOUR_ or left blank is set per client. Read by the Node service (api/, lib/) and the Python Notion builders (scripts/). Anything saved later on /settings (team, targets, reminder times) overrides the matching default here.",
+  "business": {
+    "name": "Your Brand",
+    "website": "https://example.com",
+    "tagline": "Private · By application",
+    "currency": "USD",
+    "locale": "en-US",
+    "logo_url": "",
+    "footer_logo_url": "",
+    "favicon_url": "",
+    "cover_url": "",
+    "og_image_url": "",
+    "_note": "Leave the image URLs blank to show the business name as a text wordmark. currency is an ISO code (USD, GBP, EUR); locale controls number and date formatting."
+  },
+  "public_base": "",
+  "_public_base_note": "The https address this app is deployed at, e.g. https://your-eod-app.example.com. PUBLIC_BASE_URL in the environment overrides it. Used in links inside Discord posts, Notion pages and watch links.",
+  "notion": {
+    "parent_page": "YOUR_NOTION_PARENT_PAGE_ID",
+    "sales_db": "YOUR_NOTION_SALES_DB_ID",
+    "_note": "parent_page is the Notion page everything is built under. sales_db is the lead CRM database; scripts/00_sales.py creates one if you do not have one and writes its id back here."
+  },
+  "ghl": {
+    "location": "YOUR_GHL_LOCATION_ID",
+    "leads_pipeline": "YOUR_GHL_LEADS_PIPELINE_ID",
+    "members_pipeline": "YOUR_GHL_CLIENTS_PIPELINE_ID",
+    "_note": "Optional. Only used to build links into GoHighLevel and to read stage names sent by GHL webhooks."
+  },
+  "stages": [
+    {
+      "no": 1,
+      "key": "social",
+      "name": "1. Social & DMs",
+      "colour": "gray",
+      "owner": "Setter",
+      "short": "Inbound",
+      "kpi_target": 25,
+      "advances_via": "Setter logs the DM conversation, or an ad or organic click lands on the site with attribution captured.",
+      "definition": "A named inbound conversation exists: DM, comment reply or tagged referral. Not yet on the website.",
+      "auto": false,
+      "ghl_stages": [
+        "New Lead",
+        "Contacted"
+      ],
+      "metric_source": "setter"
+    },
+    {
+      "no": 2,
+      "key": "website",
+      "name": "2. Website",
+      "colour": "brown",
+      "owner": "Marketing",
+      "short": "Site visit",
+      "kpi_target": 12,
+      "advances_via": "Automatic. The tracker (t.js) on your website records the visit, and the application form reports how far the visitor got.",
+      "definition": "A tracked visit to the site. One row per session in Site Sessions, with channel, landing page and furthest application step.",
+      "auto": true,
+      "ghl_stages": [],
+      "metric_source": "sessions"
+    },
+    {
+      "no": 3,
+      "key": "application",
+      "name": "3. Application",
+      "colour": "orange",
+      "owner": "Automated",
+      "short": "Applied",
+      "kpi_target": 70,
+      "advances_via": "Automatic. The application form posts to the GHL webhook, which creates the contact and the Notion Sales row.",
+      "definition": "The application is submitted in full and lands in GHL and Notion.",
+      "auto": true,
+      "ghl_stages": [
+        "Applied"
+      ],
+      "metric_source": "cohort"
+    },
+    {
+      "no": 4,
+      "key": "vsl1",
+      "name": "4. Initial VSL",
+      "colour": "yellow",
+      "owner": "Automated",
+      "short": "VSL 1",
+      "kpi_target": 45,
+      "advances_via": "Automatic. GHL emails the tracked watch link; the watch page reports open, play, watch depth and completion back to Notion.",
+      "definition": "The applicant has opened the Initial VSL watch page. Watch depth is recorded so a 5% skim is distinguishable from a real view.",
+      "auto": true,
+      "ghl_stages": [],
+      "metric_source": "asset",
+      "metric_props": {
+        "sent": "VSL 1 Sent",
+        "viewed": "VSL 1 Viewed"
+      }
+    },
+    {
+      "no": 5,
+      "key": "triage",
+      "name": "5. Triage Call",
+      "colour": "yellow",
+      "owner": "Closer",
+      "short": "Triage",
+      "kpi_target": 65,
+      "advances_via": "The triage rep files a Triage Call EOD report. The service reads the outcome and moves the lead.",
+      "definition": "The first (triage) call has happened. Outcome, objection and next step are captured on the EOD report.",
+      "auto": false,
+      "ghl_stages": [
+        "Setting Call Booked",
+        "Booked",
+        "Confirmed",
+        "Showed",
+        "No-Show"
+      ],
+      "metric_source": "cohort"
+    },
+    {
+      "no": 6,
+      "key": "vsl2",
+      "name": "6. Post-Triage Nurture",
+      "colour": "orange",
+      "owner": "Automated",
+      "short": "Nurture",
+      "kpi_target": 60,
+      "advances_via": "Automatic. The post-triage asset pack is emailed with tracked links; opening any asset advances the lead.",
+      "definition": "Post-triage VSL, offer documents and proof assets delivered. Engagement per asset is tracked individually.",
+      "auto": true,
+      "ghl_stages": [],
+      "metric_source": "asset",
+      "metric_props": {
+        "sent": "VSL 2 Sent",
+        "viewed": "VSL 2 Viewed"
+      }
+    },
+    {
+      "no": 7,
+      "key": "closing",
+      "name": "7. Closing Call",
+      "colour": "brown",
+      "owner": "Closer",
+      "short": "Closing",
+      "kpi_target": 35,
+      "advances_via": "The closer files a Closing Call EOD report. Won moves to Payment; Lost or Follow-up is written back with the reason.",
+      "definition": "The closing call has happened. Tier pitched, ticket, objection and decision captured.",
+      "auto": false,
+      "ghl_stages": [
+        "Closing Call Booked",
+        "Pitched"
+      ],
+      "metric_source": "cohort"
+    },
+    {
+      "no": 8,
+      "key": "payment",
+      "name": "8. Payment",
+      "colour": "green",
+      "owner": "Automated",
+      "short": "Paid",
+      "kpi_target": 95,
+      "advances_via": "Automatic. Your contract or payment tool writes the tier, ticket and paid date; GHL moves to Awaiting Payment then Closed.",
+      "definition": "Agreement signed and first payment collected. Cash collected and deal size are on the row.",
+      "auto": true,
+      "ghl_stages": [
+        "Awaiting Payment",
+        "Closed",
+        "Closed Won",
+        "Paid"
+      ],
+      "metric_source": "cohort"
+    },
+    {
+      "no": 9,
+      "key": "onboarding",
+      "name": "9. Onboarding",
+      "colour": "green",
+      "owner": "Delivery",
+      "short": "Onboarded",
+      "kpi_target": 100,
+      "advances_via": "Automatic. The client pipeline in GHL reaching its onboarding stage.",
+      "definition": "Client onboarded and delivery has started.",
+      "auto": true,
+      "ghl_stages": [
+        "Onboarding",
+        "Signed",
+        "Kick-off"
+      ],
+      "metric_source": "cohort"
+    }
+  ],
+  "exits": [
+    {
+      "key": "lost",
+      "name": "✕ Lost",
+      "colour": "red",
+      "ghl_stages": [
+        "Lost"
+      ]
+    },
+    {
+      "key": "rejected",
+      "name": "✕ Rejected",
+      "colour": "pink",
+      "ghl_stages": [
+        "Rejected"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "slug": "initial-vsl",
+      "title": "Initial VSL",
+      "stage_key": "vsl1",
+      "type": "Initial VSL",
+      "kicker": "Before your call",
+      "blurb": "A short video on what we do, who it is for, and what happens on the call you are about to have. Watch it before we speak.",
+      "video_url": "",
+      "duration_hint": "12 min"
+    },
+    {
+      "slug": "post-triage-vsl",
+      "title": "How It Works",
+      "stage_key": "vsl2",
+      "type": "Post-Triage VSL",
+      "kicker": "After your first call",
+      "blurb": "How each option differs, what it includes, and how the work is built around you.",
+      "video_url": "",
+      "duration_hint": "15 min"
+    },
+    {
+      "slug": "client-stories",
+      "title": "Client Stories",
+      "stage_key": "vsl2",
+      "type": "Proof asset",
+      "kicker": "Proof",
+      "blurb": "Clients on what changed after working with us.",
+      "video_url": "",
+      "duration_hint": "8 min"
+    }
+  ],
+  "tiers": [
+    "Tier 1",
+    "Tier 2",
+    "Tier 3"
+  ],
+  "_tiers_note": "Offer tiers written to the Tier column on Sales when a deal closes.",
+  "closers": [
+    "Closer 1"
+  ],
+  "stall_days": 7,
+  "cohort_start": "2026-01-01",
+  "_cohort_note": "Conversion is measured from this date forward. Override per request with /api?action=recompute&since=YYYY-MM-DD, or &since=all.",
+  "stage_floor": {
+    "New Lead": 1,
+    "Contacted": 1,
+    "Applied": 3,
+    "Setting Call Booked": 5,
+    "Booked": 5,
+    "Confirmed": 5,
+    "Showed": 5,
+    "No-Show": 5,
+    "Closing Call Booked": 7,
+    "Pitched": 7,
+    "Awaiting Payment": 8,
+    "Closed": 8,
+    "Closed Won": 8,
+    "Paid": 8,
+    "Triage Call Booked": 5,
+    "Onboarding": 9,
+    "Signed": 9,
+    "Kick-off": 9
+  },
+  "exit_stages": {
+    "Lost": "lost",
+    "Closed Lost": "lost",
+    "Rejected": "rejected"
+  },
+  "_stage_floor_note": "A CRM stage never lowers a lead's journey stage. It only raises it. Follow-Up deliberately has no floor: it says nothing about how far the lead actually got.",
+  "lead_sources": [
+    "Instagram DM",
+    "Referral",
+    "Website application",
+    "Event",
+    "Podcast or press",
+    "Paid ads",
+    "Outbound",
+    "Other"
+  ],
+  "site_pages": [
+    "/",
+    "/apply",
+    "/about",
+    "/thank-you"
+  ],
+  "_site_pages_note": "Paths on your website the tracker should name in Site Sessions. Anything else is recorded as 'other'.",
+  "import_dates": [],
+  "_import_dates_note": "Days on which rows were bulk-imported into Notion rather than captured live. A row created on one of these days with no Applied date is treated as historical backfill and left out of conversion maths.",
+  "_metric_source_note": "How each stage's Entered/Advanced is counted. 'cohort' = leads that reached the stage. 'setter' = conversations logged on the setter EOD tab, because every row in Sales is already past the DM. 'asset' = sent vs actually watched, because a lead lifted past a VSL stage by a CRM stage change never proves the VSL was seen. 'sessions' = live site tracking: visits recorded by t.js, and how many of them completed the application.",
+  "booking_url": "",
+  "closing_booking_url": "",
+  "_booking_note": "Triage and closing booking links shown on the watch pages. A per-lead Calendly Link on the Sales row always wins over these.",
+  "session_min_sample": 20,
+  "_session_min_sample_note": "Stage 2 is not scored until this many site sessions exist, so a handful of early visits never reads as a bottleneck.",
+  "eod": {
+    "_comment": "The EOD report system: where each report posts in Discord, who the team are, and when the nightly digest goes out. Team, targets and times can all be changed later on /settings.",
+    "discord": {
+      "guild": "",
+      "setter": "",
+      "closer": "",
+      "digest": "",
+      "logs": "",
+      "_note": "Discord ids (Developer Mode on, right click, Copy ID). Leave blank to skip posting: reports still file to Notion. setter takes setter reports; closer takes triage and closing reports; digest is the nightly standup; logs gets errors."
+    },
+    "timezone": "Europe/London",
+    "digest_hour": 21,
+    "team": [
+      {
+        "name": "Setter 1",
+        "role": "setter",
+        "discord": ""
+      },
+      {
+        "name": "Triage 1",
+        "role": "triage",
+        "discord": ""
+      },
+      {
+        "name": "Closer 1",
+        "role": "closer",
+        "discord": "",
+        "aka": [
+          "C1"
+        ]
+      }
+    ],
+    "_team_note": "One entry per person per seat. discord is their Discord user id (right click, Copy User ID) so reminders can @mention them. aka lists other spellings that should count as the same person. One person can sit in two seats: add them twice with different roles.",
+    "roles": {
+      "founder": "",
+      "head_of_sales": "",
+      "closer": "",
+      "setter": ""
+    },
+    "_roles_note": "Optional Discord role ids, used to mention a whole seat.",
+    "pathways": [
+      "Option A",
+      "Option B",
+      "Option C"
+    ],
+    "_pathways_note": "The offers or packages a lead can lean towards on the triage and closing reports.",
+    "budget_bands": [
+      "Up to 5k",
+      "5k to 15k",
+      "15k to 50k",
+      "50k plus",
+      "Discuss on the call"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+.env
+.env.*
+scripts/local_test.js
+.playwright-mcp
+node_modules
+*.bak
+.data

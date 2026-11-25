@@ -1,0 +1,19 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# per-client state written by the setup scripts and the local preview
+journey.state.json
+.view-ids.json
+.page-blocks.json
+.data/
+
+# tooling
+node_modules/
+.vercel/
+__pycache__/
+*.pyc
+*.bak
+.DS_Store
+.playwright-mcp/

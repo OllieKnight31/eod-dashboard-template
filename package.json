@@ -1,0 +1,17 @@
+{
+  "name": "eod-dashboard-template",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EOD reports and client-journey tracker for a setter, triage and closer sales team: stage derivation, VSL watch pages and tracking, EOD ingest, and the Notion funnel-health recompute.",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "recompute": "node scripts/recompute.js",
+    "seed": "python3 scripts/03_seed.py",
+    "check": "for f in api/index.js lib/*.js public/auth.js public/t.js public/brand.js scripts/*.js; do node --check $f || exit 1; done && echo OK",
+    "test": "npm run check && node scripts/smoke_test.js"
+  },
+  "license": "MIT"
+}

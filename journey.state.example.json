@@ -1,0 +1,14 @@
+{
+  "_comment": "Written by the setup scripts in scripts/. Copy nothing here by hand: run them and this file becomes journey.state.json.",
+  "page": "",
+  "stages_db": "",
+  "eod_db": "",
+  "setter_db": "",
+  "assets_db": "",
+  "sessions_db": "",
+  "signoff_db": "",
+  "eod_page": "",
+  "howto_page": "",
+  "board_view": "",
+  "board_url": ""
+}

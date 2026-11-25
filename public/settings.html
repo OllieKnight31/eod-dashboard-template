@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark">
+<title>Settings</title>
+<script src="/brand.js" defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400&family=Inter+Tight:wght@300;400;500;600&display=swap">
+<script src="/auth.js" data-allow="owner"></script>
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ground: #0A0A0A; --sheet: #171717; --field: #111111; --rule: rgba(163,163,163,.16); --rule-2: rgba(163,163,163,.32);
+    --ink: #F5F5F5; --ink-2: rgba(245,245,245,.76); --mute: rgba(245,245,245,.46);
+    --good: #9FD6A8; --bad: #E2857F; --accent: #A3A3A3; --gold-dark: #404040;
+    --serif: "Newsreader",Georgia,"Times New Roman",serif;
+  }
+  body { font-family: "Inter Tight","Helvetica Neue",Arial,sans-serif; background: var(--ground); color: var(--ink); min-height: 100vh; font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; color-scheme: dark; }
+  .container { max-width: 900px; margin: 0 auto; padding: 22px clamp(18px,4vw,40px) 60px; }
+  .brand { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: .28em; margin-bottom: 8px; font-weight: 500; }
+  h1 { font-family: var(--serif); font-size: 30px; font-weight: 300; line-height: 1.1; }
+  .lede { font-size: 13.5px; color: var(--mute); margin-top: 6px; }
+  .jump { display: flex; gap: 6px; flex-wrap: wrap; margin: 18px 0 6px; }
+  .jump a { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; border: 1px solid var(--rule-2); padding: 6px 10px; }
+  .jump a:hover { color: var(--ink); border-color: var(--accent); }
+  .notice { font-size: 13.5px; color: var(--ink-2); border: 1px solid rgba(226,133,127,.4); background: rgba(226,133,127,.07); padding: 12px 16px; margin-top: 16px; }
+
+  .panel { background: var(--sheet); border: 1px solid var(--rule); padding: 22px 24px 18px; margin-top: 18px; scroll-margin-top: 16px; }
+  .panel h2 { font-family: var(--serif); font-size: 21px; font-weight: 400; }
+  .panel__desc { font-size: 13.5px; color: var(--mute); margin: 4px 0 14px; max-width: 70ch; }
+  .guide { font-size: 13px; color: var(--ink-2); border-left: 2px solid var(--rule-2); padding: 2px 0 2px 14px; margin: 0 0 16px; }
+  .guide p + p { margin-top: 6px; }
+  .guide strong { color: var(--ink); font-weight: 500; }
+  h3 { font-size: 10.5px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin: 18px 0 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 14px; }
+  .field.wide { grid-column: 1 / -1; }
+  label, .lab { display: block; font-size: 12.5px; color: var(--ink-2); margin-bottom: 5px; }
+  input[type=text], input[type=password], input[type=number], select { width: 100%; height: 38px; padding: 0 11px; background: var(--field); border: 1px solid rgba(245,245,245,.16); border-radius: 0; color: var(--ink); font: inherit; font-size: 14px; }
+  input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .unit { display: flex; align-items: center; gap: 8px; }
+  .unit span { font-size: 12px; color: var(--mute); white-space: nowrap; }
+  .help { font-size: 12px; color: var(--mute); margin-top: 5px; }
+  .err { font-size: 12px; color: var(--bad); margin-top: 5px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .row > input[type=text] { flex: 1 1 160px; width: auto; }
+  .btn { height: 38px; padding: 0 16px; font: inherit; font-size: 10.5px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; border: 1px solid var(--rule-2); border-radius: 0; background: transparent; color: var(--ink); cursor: pointer; white-space: nowrap; }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--ground); }
+  .btn.primary:hover { background: var(--gold-dark); border-color: var(--gold-dark); color: var(--ink); }
+  .btn.ghost { border-color: rgba(245,245,245,.16); color: var(--ink-2); }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .foot { display: flex; justify-content: flex-end; align-items: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .msg { font-size: 13px; color: var(--mute); overflow-wrap: anywhere; }
+  .msg.ok { color: var(--good); } .msg.fail { color: var(--bad); }
+
+  /* toggles, day and seat pickers */
+  .checks { display: flex; gap: 6px; flex-wrap: wrap; }
+  .checks label { display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 7px 10px; border: 1px solid rgba(245,245,245,.16); font-size: 12.5px; cursor: pointer; }
+  .checks input { accent-color: var(--accent); }
+
+  /* people on the team */
+  .person { display: grid; grid-template-columns: minmax(130px,1.2fr) minmax(150px,1.2fr) minmax(140px,1.4fr) auto auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .person .rm { width: 38px; padding: 0; }
+  @media (max-width: 720px) { .person { grid-template-columns: 1fr 1fr; } }
+  .none { font-size: 13px; color: var(--mute); margin-bottom: 8px; }
+
+  /* logins */
+  .login { display: grid; grid-template-columns: minmax(130px,1fr) minmax(150px,1.2fr) auto auto; gap: 8px 14px; align-items: center; padding: 11px 0; border-top: 1px solid var(--rule); }
+  .login__sub, .login__user { font-size: 12.5px; color: var(--mute); overflow-wrap: anywhere; }
+  .login__reset { grid-column: 1 / -1; display: flex; gap: 8px; }
+  .chip { font-size: 9.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--rule-2); color: var(--accent); white-space: nowrap; justify-self: start; }
+  @media (max-width: 720px) { .login { grid-template-columns: 1fr 1fr; } }
+  [hidden], .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="brand" data-brand-name>Your Brand</div>
+  <h1>Settings</h1>
+  <p class="lede">Who can sign in, who is on the team, what they are measured against, and when the reminders go out. Changes are live within 30 seconds, with no redeploy.</p>
+  <div class="jump"><a href="#p-logins">Logins</a><a href="#p-team">Team</a><a href="#p-targets">Targets</a><a href="#p-reminders">Reminders &amp; digest</a><a href="#p-password">My password</a></div>
+  <div id="storage" class="notice" hidden></div>
+
+  <!-- ── Logins ── -->
+  <section class="panel" id="p-logins">
+    <h2>Logins</h2>
+    <p class="panel__desc">Who can sign in, and what they see. You are the owner: the only login that can open Settings. Give everyone else their own login below.</p>
+    <div class="guide">
+      <p><strong>Manager:</strong> sees Reports, the Scorecard for everyone and the Client journey, and can file any report. No access to Settings.</p>
+      <p><strong>Setter, Triage, Closer:</strong> sees only Submit EOD, with only their own seat, and their own scorecard. Their name is filled in for them.</p>
+    </div>
+    <div id="loginList"></div>
+    <form id="loginAdd" autocomplete="off" novalidate>
+      <h3>Add a login</h3>
+      <div class="grid">
+        <div class="field"><label for="la_name">Name</label><input type="text" id="la_name" placeholder="Jamie Smith"></div>
+        <div class="field"><label for="la_user">Email or username</label><input type="text" id="la_user" placeholder="jamie@yourbusiness.com" autocapitalize="none" spellcheck="false"></div>
+        <div class="field"><label for="la_role">Role</label><select id="la_role"></select></div>
+        <div class="field" id="la_personField"><label for="la_person">Files reports as</label><select id="la_person"></select></div>
+        <div class="field wide"><label for="la_pass">Password</label>
+          <div class="row"><input type="text" id="la_pass" placeholder="At least 8 characters" autocomplete="off" spellcheck="false"><button type="button" class="btn" id="la_gen">Generate</button></div>
+          <div class="help">Send them this password yourself. They can change it after signing in, and you can reset it here at any time.</div></div>
+      </div>
+      <div class="foot"><span class="msg" id="loginMsg" role="status"></span><button class="btn primary" type="submit">Add login</button></div>
+    </form>
+  </section>
+
+  <!-- ── Team ── -->
+  <form class="panel" id="p-team" data-group="team" novalidate>
+    <h2>Team</h2>
+    <p class="panel__desc">Who sits in each seat. These names fill the pickers on the report, are who the reminder chases, and are who the scorecard expects a report from.</p>
+    <div class="guide">
+      <p><strong>Discord user ID</strong> makes a reminder actually notify the person: in Discord turn on User Settings → Advanced → Developer Mode, then right-click them → Copy User ID.</p>
+      <p><strong>Also known as</strong> are other spellings that should file as the same person (Jay, Jamie S). Untick <strong>Remind</strong> for someone who is on the list but never chased.</p>
+    </div>
+    <div id="roster"></div>
+    <div class="foot"><span class="msg" role="status"></span><button class="btn primary" type="submit">Save team</button></div>
+  </form>
+
+  <!-- ── Targets ── -->
+  <form class="panel" id="p-targets" data-group="targets" novalidate>
+    <h2>Daily targets</h2>
+    <p class="panel__desc">Per person, per day. These drive On target / Below / Critical on the scorecard and the dots in the digest. The team tiles multiply them up: target × people × days. 0 switches a target off.</p>
+    <div class="fields"></div>
+    <div class="foot"><span class="msg" role="status"></span><button class="btn primary" type="submit">Save targets</button></div>
+  </form>
+
+  <!-- ── Reminders & digest ── -->
+  <form class="panel" id="p-reminders" data-group="reminders" novalidate>
+    <h2>Reminders &amp; daily digest</h2>
+    <p class="panel__desc">The reminder names whoever has not filed, in their own EOD channel. The digest sums up the team’s day in daily-standup. The reminder days are also the days the scorecard expects a report.</p>
+    <div class="fields"></div>
+    <div class="foot"><span class="msg" role="status"></span><button class="btn primary" type="submit">Save schedule</button></div>
+  </form>
+
+  <!-- ── My password ── -->
+  <form class="panel" id="p-password" autocomplete="off" novalidate>
+    <h2>My password</h2>
+    <p class="panel__desc">Change the password you sign in with. If you ever lose it, the setup code on the sign-in page resets the owner login.</p>
+    <div class="grid">
+      <div class="field"><label for="mp_cur">Current password</label><input type="password" id="mp_cur" autocomplete="current-password"></div>
+      <div class="field"><label for="mp_new">New password</label><input type="password" id="mp_new" autocomplete="new-password"></div>
+    </div>
+    <div class="foot"><span class="msg" role="status"></span><button class="btn primary" type="submit">Change password</button></div>
+  </form>
+</div>
+
+<script>
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const el = (tag, props = {}, ...kids) => {
+  const n = Object.assign(document.createElement(tag), props);
+  for (const k of kids) if (k != null && k !== '') n.append(k);
+  return n;
+};
+async function api(qs, body) {
+  const resp = await fetch('/api?' + qs, body
+    ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+    : { cache: 'no-store' });
+  return { code: resp.status, data: await resp.json().catch(() => ({ message: 'Unexpected response from the server.' })) };
+}
+
+const ROLES = ['setter', 'triage', 'closer'];
+const ROLE_ONE = { owner: 'Owner', manager: 'Manager', setter: 'Setter', triage: 'Triage', closer: 'Closer' };
+const ROLE_MANY = { setter: 'Setters', triage: 'Triage', closer: 'Closers' };
+const DAYS = [[1, 'Mon'], [2, 'Tue'], [3, 'Wed'], [4, 'Thu'], [5, 'Fri'], [6, 'Sat'], [0, 'Sun']];
+const UNIT = { day: 'a day', pct: '%', money: '$ a day' };
+let state = { fields: [], effective: {} };
+const say = (form, text, kind = '') => { const m = $('.msg', form); m.textContent = text; m.className = 'msg ' + kind; };
+
+/* ── one control per field; the stored value is always a string ───────────── */
+function control(f) {
+  const value = state.effective[f.key] ?? '';
+  const wrap = el('div', { className: 'field' });
+  wrap.dataset.key = f.key;
+  let read;
+  if (f.widget === 'toggle') {
+    const box = el('input', { type: 'checkbox', checked: value === 'on' });
+    wrap.append(el('div', { className: 'checks' }, el('label', {}, box, f.label)));
+    read = () => (box.checked ? 'on' : 'off');
+  } else if (f.widget === 'hour') {
+    const sel = el('select', { ariaLabel: f.label });
+    for (let h = 0; h < 24; h++) sel.append(el('option', { value: String(h), textContent: `${String(h).padStart(2, '0')}:00` }));
+    sel.value = String(value);
+    wrap.append(el('span', { className: 'lab', textContent: f.label }), sel);
+    read = () => sel.value;
+  } else if (f.widget === 'days' || f.widget === 'roles') {
+    const on = String(value).split(',');
+    const opts = f.widget === 'days' ? DAYS.map(([v, t]) => [String(v), t]) : ROLES.map((r) => [r, ROLE_ONE[r]]);
+    const boxes = opts.map(([v, t]) => [v, el('input', { type: 'checkbox', checked: on.includes(v) }), t]);
+    wrap.classList.add('wide');
+    wrap.append(el('span', { className: 'lab', textContent: f.label }), el('div', { className: 'checks' }, ...boxes.map(([, box, t]) => el('label', {}, box, t))));
+    read = () => boxes.filter(([, box]) => box.checked).map(([v]) => v).join(',');
+  } else {
+    const input = el('input', { type: f.unit ? 'number' : 'text', value, placeholder: f.placeholder, id: 'f_' + f.key });
+    if (f.unit) { input.min = '0'; input.step = 'any'; }
+    wrap.append(el('label', { htmlFor: 'f_' + f.key, textContent: f.label }),
+      f.unit ? el('div', { className: 'unit' }, input, el('span', { textContent: UNIT[f.unit] || '' })) : input);
+    read = () => input.value.trim();
+  }
+  if (f.help) wrap.append(el('div', { className: 'help', textContent: f.help }));
+  wrap.read = read;
+  return wrap;
+}
+
+function paintGroup(group) {
+  const form = $(`form[data-group="${group}"]`), host = $('.fields', form);
+  const fields = state.fields.filter((f) => f.group === group);
+  const subs = [...new Set(fields.map((f) => f.sub))];
+  host.replaceChildren(...subs.flatMap((sub) => [
+    sub ? el('h3', { textContent: sub }) : null,
+    el('div', { className: 'grid' }, ...fields.filter((f) => f.sub === sub).map(control)),
+  ].filter(Boolean)));
+}
+
+/* ── team ─────────────────────────────────────────────────────────────────── */
+function personRow(p = {}) {
+  const row = el('div', { className: 'person' },
+    el('input', { type: 'text', className: 'p-name', value: p.name || '', placeholder: 'Name', ariaLabel: 'Name' }),
+    el('input', { type: 'text', className: 'p-discord', value: p.discord || '', placeholder: 'Discord user ID', ariaLabel: 'Discord user ID', inputMode: 'numeric' }),
+    el('input', { type: 'text', className: 'p-aka', value: (p.aka || []).join(', '), placeholder: 'Also known as', ariaLabel: 'Also known as' }),
+    el('div', { className: 'checks' }, el('label', {}, el('input', { type: 'checkbox', className: 'p-nudge', checked: p.nudge !== false }), 'Remind')),
+    el('button', { type: 'button', className: 'btn ghost rm', textContent: '×', ariaLabel: 'Remove this person', onclick: () => row.remove() }));
+  return row;
+}
+function paintRoster() {
+  let roster = {};
+  try { roster = JSON.parse(state.effective.ROSTER_JSON || '{}'); } catch { roster = {}; }
+  $('#roster').replaceChildren(...ROLES.flatMap((role) => {
+    const list = el('div', { className: 'people' }, ...(roster[role] || []).map(personRow));
+    list.dataset.role = role;
+    return [
+      el('h3', { textContent: ROLE_MANY[role] }),
+      (roster[role] || []).length ? null : el('div', { className: 'none', textContent: role === 'setter' ? 'No setter yet. Add one when the seat is filled.' : 'Nobody in this seat.' }),
+      list,
+      el('button', { type: 'button', className: 'btn ghost', textContent: `Add a ${ROLE_ONE[role].toLowerCase()}`, onclick: (e) => { const prev = e.target.previousElementSibling; prev.append(personRow()); $('.p-name', prev.lastChild).focus(); } }),
+    ].filter(Boolean);
+  }));
+}
+function readRoster() {
+  const out = {};
+  for (const list of $$('#roster .people')) {
+    out[list.dataset.role] = $$('.person', list).map((row) => ({
+      name: $('.p-name', row).value.trim(),
+      discord: $('.p-discord', row).value.trim(),
+      aka: $('.p-aka', row).value.split(',').map((s) => s.trim()).filter(Boolean),
+      ...($('.p-nudge', row).checked ? {} : { nudge: false }),
+    })).filter((p) => p.name);
+  }
+  return JSON.stringify(out);
+}
+
+/* ── saving a card ────────────────────────────────────────────────────────── */
+function take(d) { state = { fields: d.fields, effective: d.effective }; }
+for (const form of $$('form[data-group]')) {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const group = form.dataset.group, button = $('button[type=submit]', form);
+    const values = group === 'team' ? { ROSTER_JSON: readRoster() }
+      : Object.fromEntries($$('.field[data-key]', form).map((w) => [w.dataset.key, w.read()]));
+    $$('.err', form).forEach((n) => n.remove());
+    say(form, 'Saving…'); button.disabled = true;
+    const { code, data } = await api('source=settings', { values });
+    button.disabled = false;
+    if (code !== 200) {
+      for (const [key, message] of Object.entries(data.fields || {})) {
+        const w = $(`.field[data-key="${key}"]`, form);
+        if (w) w.append(el('div', { className: 'err', textContent: message }));
+      }
+      return say(form, Object.values(data.fields || {})[0] || data.message || 'Could not save.', 'fail');
+    }
+    take(data);
+    if (group === 'team') { paintRoster(); paintLoginForm(); } else paintGroup(group);
+    say(form, 'Saved. Live within 30 seconds.', 'ok');
+  });
+}
+
+/* ── logins ───────────────────────────────────────────────────────────────── */
+const loginSay = (text, kind = '') => { const m = $('#loginMsg'); m.textContent = text; m.className = 'msg ' + kind; };
+const newPassword = () => {
+  // readable and hard to guess: 4 groups of 4, no look-alike characters
+  const set = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789', bytes = crypto.getRandomValues(new Uint8Array(16));
+  return [...bytes].map((b, i) => (i && i % 4 === 0 ? '-' : '') + set[b % set.length]).join('');
+};
+function rosterFor(role) {
+  try { return ((JSON.parse(state.effective.ROSTER_JSON || '{}') || {})[role] || []).map((p) => p.name); }
+  catch { return []; }
+}
+
+// Role and "files reports as" pickers on the add form.
+function paintLoginForm() {
+  const role = $('#la_role'), keep = role.value;
+  role.replaceChildren(el('option', { value: 'manager', textContent: 'Manager (sees everything except Settings)' }),
+    ...ROLES.map((r) => el('option', { value: r, textContent: `${ROLE_ONE[r]} (only their own seat)` })));
+  if ([...role.options].some((o) => o.value === keep)) role.value = keep;
+  const rep = role.value !== 'manager', names = rep ? rosterFor(role.value) : [];
+  $('#la_personField').classList.toggle('hidden', !rep);
+  $('#la_person').replaceChildren(el('option', { value: '', textContent: 'The name typed above' }), ...names.map((n) => el('option', { value: n, textContent: n })));
+  // if their name is on the team list, link to it so their reports line up
+  const typed = $('#la_name').value.trim().toLowerCase();
+  const match = names.find((n) => n.toLowerCase() === typed);
+  if (match) $('#la_person').value = match;
+}
+$('#la_role').addEventListener('change', paintLoginForm);
+$('#la_name').addEventListener('input', paintLoginForm);
+$('#la_gen').onclick = () => { $('#la_pass').value = newPassword(); };
+
+async function loadLogins() {
+  paintLoginForm();
+  const { code, data } = await api('action=users');
+  if (code !== 200) { $('#loginList').replaceChildren(el('div', { className: 'none', textContent: data.message || 'Could not load the logins.' })); return; }
+  $('#loginList').replaceChildren(...data.users.map(loginRow));
+}
+
+function loginRow(u) {
+  const row = el('div', { className: 'login' },
+    el('div', {}, el('div', { textContent: u.name }),
+      u.person && u.person !== u.name ? el('div', { className: 'login__sub', textContent: `files reports as ${u.person}` }) : null),
+    el('div', { className: 'login__user', textContent: u.username }),
+    el('span', { className: 'chip', textContent: ROLE_ONE[u.role] }));
+  const actions = el('div', { className: 'row' });
+  const reset = el('button', { type: 'button', className: 'btn ghost', textContent: 'Reset password' });
+  reset.onclick = () => {
+    if ($('.login__reset', row)) { $('.login__reset', row).remove(); return; }
+    const box = el('input', { type: 'text', value: newPassword(), ariaLabel: `New password for ${u.name}`, spellcheck: false });
+    const go = el('button', { type: 'button', className: 'btn', textContent: 'Set this password' });
+    go.onclick = async () => {
+      const { code, data } = await api('source=user_save', { id: u.id, name: u.name, username: u.username, role: u.role, person: u.person, password: box.value });
+      loginSay(code === 200 ? `Password reset for ${u.name}. Send it to them: ${box.value}` : (data.message || 'Could not reset.'), code === 200 ? 'ok' : 'fail');
+      if (code === 200) loadLogins();
+    };
+    row.append(el('div', { className: 'login__reset' }, box, go));
+    box.select();
+  };
+  actions.append(reset);
+  if (u.role !== 'owner') {
+    const remove = el('button', { type: 'button', className: 'btn ghost', textContent: 'Remove', ariaLabel: `Remove ${u.name}’s login` });
+    remove.onclick = async () => {
+      if (remove.dataset.sure !== '1') { remove.dataset.sure = '1'; remove.textContent = 'Really remove?'; return; }
+      const { code, data } = await api('source=user_delete', { id: u.id });
+      loginSay(code === 200 ? `${u.name} can no longer sign in.` : (data.message || 'Could not remove.'), code === 200 ? 'ok' : 'fail');
+      loadLogins();
+    };
+    actions.append(remove);
+  }
+  row.append(actions);
+  return row;
+}
+
+$('#loginAdd').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const body = { name: $('#la_name').value.trim(), username: $('#la_user').value.trim(), role: $('#la_role').value, person: $('#la_person').value, password: $('#la_pass').value };
+  loginSay('Adding…');
+  const { code, data } = await api('source=user_save', body);
+  if (code !== 200) { loginSay(data.message || 'Could not add the login.', 'fail'); return; }
+  loginSay(`Login added for ${body.name}. Send them: ${body.username} / ${body.password}`, 'ok');
+  for (const id of ['la_name', 'la_user', 'la_pass']) $('#' + id).value = '';
+  loadLogins();
+});
+
+/* ── my password ──────────────────────────────────────────────────────────── */
+$('#p-password').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  if ($('#mp_new').value.length < 8) return say(form, 'The new password needs at least 8 characters.', 'fail');
+  say(form, 'Changing…');
+  const { code, data } = await api('source=password', { current: $('#mp_cur').value, next: $('#mp_new').value });
+  if (code !== 200) return say(form, data.message || 'Could not change it.', 'fail');
+  $('#mp_cur').value = ''; $('#mp_new').value = '';
+  say(form, 'Password changed.', 'ok');
+});
+
+/* ── boot ─────────────────────────────────────────────────────────────────── */
+window.EOD_AUTH.then(async (me) => {
+  // Logins off (no ADMIN_PASSWORD / ACCESS_PASSWORD): no logins or password to manage.
+  const open = Boolean(me && me.open);
+  if (open) {
+    for (const id of ['p-logins', 'p-password']) { const n = document.getElementById(id); if (n) n.remove(); }
+    document.querySelectorAll('.jump a[href="#p-logins"], .jump a[href="#p-password"]').forEach((a) => a.remove());
+    const note = el('div', { className: 'notice', textContent: 'Logins are off, so anyone with the link can open every page, including this one. To add a password, set ADMIN_PASSWORD in your Vercel project settings and redeploy. You then create the owner login on /login.' });
+    $('#storage').before(note);
+  }
+  const { code, data } = await api('action=settings');
+  if (code !== 200) { $('#storage').hidden = false; $('#storage').textContent = data.message || 'Could not load the settings.'; return; }
+  take(data);
+  if (data.storage === 'none') { $('#storage').hidden = false; $('#storage').textContent = 'Storage isn’t connected, so nothing here can be saved yet. Attach Upstash Redis to the Vercel project and redeploy.'; }
+  paintRoster(); paintGroup('targets'); paintGroup('reminders');
+  if (!open) loadLogins();
+});
+</script>
+</body>
+</html>
